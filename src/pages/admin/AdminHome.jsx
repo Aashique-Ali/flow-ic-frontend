@@ -16,12 +16,16 @@ const AdminHome = () => {
   const [totalUser, setTotalUser] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  let token;
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
+        let token=localStorage.getItem("authToken")
+        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`,
+        { headers: {
+          Authorization: `Bearer ${token}` 
+        }});
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
@@ -38,7 +42,10 @@ const AdminHome = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`);
+        const response = await axios.get(`${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`,
+          { headers: {
+            Authorization: `Bearer ${token}` 
+          }});
         if (response.data && response.data.onlineUserAttendanceRecord) {
           setTotalOnlineUser(response.data.onlineUserAttendanceRecord.length);
           setTotalUser(response.data.totalUser);
@@ -55,7 +62,10 @@ const AdminHome = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers`);
+        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers`,
+          { headers: {
+            Authorization: `Bearer ${token}` 
+          }});
         setAbsent(response.data.count);
       } catch (err) {
         setError("An error occurred while fetching absent users data.");
@@ -65,7 +75,10 @@ const AdminHome = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayPresentUsers`);
+        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayPresentUsers`,
+          { headers: {
+            Authorization: `Bearer ${token}` 
+          }});
         setPresent(response.data.presentUsers.length);
       } catch (err) {
         setError("An error occurred while fetching present users data.");
