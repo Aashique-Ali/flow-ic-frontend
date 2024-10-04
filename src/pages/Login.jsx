@@ -26,7 +26,7 @@ const Login = () => {
       return toast.warning("Please enter a valid email.");
 
     try {
-      const response = await axios.post(`${apiUrl}/api/user/login`, { email, password });
+      const response = await axios.post(`${apiUrl}/api/user/login`, { email, password },{withCredentials:true});
 
       if (response.status === 200) {
         const data = response.data;
