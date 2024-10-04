@@ -27,6 +27,7 @@ const AddTeamMember = () => {
   const [jobTypeOptions, setJobTypeOptions] = useState([]);
   const [designationOptions, setDesignationOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
 
   const { control, handleSubmit, register, formState: { errors } } = useForm({
@@ -46,7 +47,7 @@ const AddTeamMember = () => {
   useEffect(() => {
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await axios.get(`${apiUrl}/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id
@@ -59,7 +60,7 @@ const AddTeamMember = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await axios.get(`${apiUrl}/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id
@@ -73,7 +74,7 @@ const AddTeamMember = () => {
     
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await axios.get(`${apiUrl}/api/role/getAllRoles`);
 
         let roles = [];
         const role = response.data.roles;
@@ -111,7 +112,7 @@ const AddTeamMember = () => {
 
 
     try {
-      await axios.post(`/api/user/create`,formattedData);
+      await axios.post(`${apiUrl}/api/user/create`,formattedData);
       toast.success("User created successfully");
       navigate("/dashboard/teamlead/team");
     } catch (error) {

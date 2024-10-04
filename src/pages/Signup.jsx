@@ -38,6 +38,7 @@ const designationOptions = [
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const { control, handleSubmit, register, formState: { errors } } = useForm({
     defaultValues: {
@@ -55,7 +56,7 @@ const SignUp = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post('/api/signup', data);
+      await axios.post('${apiUrl}/api/signup', data);
       toast.success('Sign up successful');
       navigate('/login');
     } catch (error) {

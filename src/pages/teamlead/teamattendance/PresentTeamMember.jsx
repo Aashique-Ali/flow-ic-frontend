@@ -29,6 +29,7 @@ const PresentTeamMember = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
+  const apiUrl = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const PresentTeamMember = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `/api/attendance/getAllTodayPresentUsers?page=${currentPage}&size=${pageSize}`
+          `${apiUrl}/api/attendance/getAllTodayPresentUsers?page=${currentPage}&size=${pageSize}`
         );
 
         if (response.data && response.data.presentUsers) {

@@ -29,10 +29,11 @@ const TeamLeadDashboard = () => {
   const navigate = useNavigate();
   const { userRole } = useAuth();
   const { username } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(`/api/user/logout`);
+      const response = await axios.post(`${apiUrl}/api/user/logout`);
 
       if (!response.status === 200) {
         throw new Error("Logout failed. Please try again.");

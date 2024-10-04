@@ -27,7 +27,7 @@ const AttendanceDetails = () => {
   const [userData, setUserData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   let { id } = useParams();
 
   const fetchAttendanceData = async (date) => {
@@ -40,7 +40,7 @@ const AttendanceDetails = () => {
       const year = date.getFullYear();
 
       const response = await axios.get(
-        `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
+        `${apiUrl}/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
 
       console.log(response.data.monthAttendance);
@@ -62,7 +62,7 @@ const AttendanceDetails = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await axios.get(`${apiUrl}/api/user/getUserById/${id}`);
         setUserData(response.data.user);
       } catch (error) {
         console.log(error);

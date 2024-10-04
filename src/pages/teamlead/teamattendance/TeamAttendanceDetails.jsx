@@ -21,7 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../../../auth/AuthContext";
+
 
 const TeamAttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -29,6 +29,7 @@ const TeamAttendanceDetails = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
   let { id } = useParams();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
 
 
@@ -42,7 +43,7 @@ const TeamAttendanceDetails = () => {
       const year = date.getFullYear();
      
       const response = await axios.get(
-        `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
+        `${apiUrl}/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
 
       if (response.data.success && response.data.monthAttendance.length > 0) {
@@ -62,7 +63,7 @@ const TeamAttendanceDetails = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await axios.get(`${apiUrl}/api/user/getUserById/${id}`);
         setUserData(response.data.user);
       } catch (error) {
         console.log(error);

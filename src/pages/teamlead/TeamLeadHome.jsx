@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Eye, Star, Clipboard } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../auth/AuthContext";
+
 
 const TeamLeadHome = () => {
   const [projectCount, setProjectCount] = useState(12);
@@ -14,12 +14,13 @@ const TeamLeadHome = () => {
   const [totalUser, setTotalUser] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/user/getMyAllUsers`);
+        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
@@ -37,7 +38,7 @@ const TeamLeadHome = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `/api/attendance/getMyTeamMemberAttendanceStatus`
+          `${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`
         );
         if (response.data && response.data.onlineUserAttendanceRecord) {
           const onlineCount = response.data.onlineUserAttendanceRecord.length;
@@ -58,7 +59,7 @@ const TeamLeadHome = () => {
     const fetchAbsentUsers = async () => {
       try {
         const response = await axios.get(
-          `/api/attendance/getAllTodayAbsentUsers`
+          `${apiUrl}/api/attendance/getAllTodayAbsentUsers`
         );
         setAbsent(response.data.count);
       } catch (err) {
@@ -70,7 +71,7 @@ const TeamLeadHome = () => {
     const fetchPresentUsers = async () => {
       try {
         const response = await axios.get(
-          `/api/attendance/getAllTodayPresentUsers`
+          `${apiUrl}/api/attendance/getAllTodayPresentUsers`
         );
         setPresent(response.data.presentUsers.length);
       } catch (err) {

@@ -23,6 +23,7 @@ import {
 const GetMyAttendance = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
@@ -47,7 +48,7 @@ const GetMyAttendance = () => {
         const currentMonth = monthNames[today.getMonth()];
 
         const response = await axios.get(
-          `/api/attendance/getMyMonthAttendance/${currentMonth}`
+          `${apiUrl}/api/attendance/getMyMonthAttendance/${currentMonth}`
         );
         setAttendanceData(response.data.monthAttendance);
       } catch (error) {

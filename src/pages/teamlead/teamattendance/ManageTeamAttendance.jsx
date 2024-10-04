@@ -50,6 +50,7 @@ const ManageTeamAttendance = () => {
   const [searchName, setSearchName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [requestsPerPage] = useState(10);
+  const apiUrl = import.meta.env.VITE_API_URL;
   
 
 
@@ -57,7 +58,7 @@ const ManageTeamAttendance = () => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/user/getMyAllUsers`);
+        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
         
         
         if (response.data && response.data.myUsers) {
@@ -139,7 +140,7 @@ const ManageTeamAttendance = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.put(`/api/user/delete/${id}`);
+      await axios.put(`${apiUrl}/api/user/delete/${id}`);
       toast.success("User deleted successfully");
       setRequests((prev) => prev.filter((request) => request._id !== id));
     } catch (error) {

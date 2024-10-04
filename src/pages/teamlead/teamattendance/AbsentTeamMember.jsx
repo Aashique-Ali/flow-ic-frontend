@@ -22,6 +22,7 @@ const AbsentTeamMember = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const pageSize = 10; 
 
@@ -29,7 +30,7 @@ const AbsentTeamMember = () => {
     const fetchAbsentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/attendance/getAllTodayAbsentUsers?page=${currentPage}&size=${pageSize}`);
+        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers?page=${currentPage}&size=${pageSize}`);
        
         if (response.data && response.data.absentUsers) {
           setAbsentUsers(response.data.absentUsers);

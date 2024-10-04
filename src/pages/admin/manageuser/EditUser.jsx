@@ -20,7 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../../../auth/AuthContext";
+
 
 
 const EditUser = () => {
@@ -30,6 +30,7 @@ const EditUser = () => {
   const [roleOptions, setRoleOptions] = useState([]);
   const [currUser, setCurrUser] = useState(null); 
   const { id } = useParams();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const { control, handleSubmit, register, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -48,7 +49,7 @@ const EditUser = () => {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await axios.get(`${apiUrl}/api/user/getUserById/${id}`);
         
         const userData = response.data?.user;
     
@@ -72,7 +73,7 @@ const EditUser = () => {
 
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await axios.get(`${apiUrl}/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id,
@@ -85,7 +86,7 @@ const EditUser = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await axios.get(`${apiUrl}/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id,
@@ -98,7 +99,7 @@ const EditUser = () => {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await axios.get(`${apiUrl}/api/role/getAllRoles`);
      
         setRoleOptions(response.data.roles.map(role => ({
           label: role.name,
@@ -127,7 +128,7 @@ const EditUser = () => {
     console.log("Formatted Form Data:", formattedData);
 
     try {
-      const updateduser = await axios.put(`/api/user/updateUserRecord/${id}`,formattedData);
+      const updateduser = await axios.put(`${apiUrl}/api/user/updateUserRecord/${id}`,formattedData);
       console.log(updateduser)
       toast.success("User updated successfully");
       navigate("/dashboard/admin/team");

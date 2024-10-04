@@ -28,6 +28,7 @@ const EditTeamMember = () => {
   const [designationOptions, setDesignationOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
   const [currUser, setCurrUser] = useState(null); 
+  const apiUrl = import.meta.env.VITE_API_URL;
 
 
   const { id } = useParams();
@@ -49,7 +50,7 @@ const EditTeamMember = () => {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await axios.get(`${apiUrl}/api/user/getUserById/${id}`);
       
         const userData = response.data?.user;
         
@@ -73,7 +74,7 @@ const EditTeamMember = () => {
 
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await axios.get(`${apiUrl}/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id,
@@ -86,7 +87,7 @@ const EditTeamMember = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await axios.get(`${apiUrl}/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id,
@@ -99,7 +100,7 @@ const EditTeamMember = () => {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await axios.get(`${apiUrl}/api/role/getAllRoles`);
 
         let roles = [];
         const role = response.data.roles;
@@ -137,7 +138,7 @@ const EditTeamMember = () => {
     console.log("Formatted Form Data:", formattedData);
 
     try {
-      const updateduser = await axios.put(`/api/user/updateUserRecord/${id}`,formattedData);
+      const updateduser = await axios.put(`${apiUrl}/api/user/updateUserRecord/${id}`,formattedData);
       
       toast.success("User updated successfully");
       navigate("/dashboard/teamlead/team");

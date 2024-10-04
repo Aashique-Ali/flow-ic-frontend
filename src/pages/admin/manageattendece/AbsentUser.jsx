@@ -29,12 +29,13 @@ const AbsentUser = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchAbsentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/attendance/getAllTodayAbsentUsers`);
+        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers`);
         if (response.data && response.data.absentUsers) {
           setAbsentUsers(response.data.absentUsers);
           setFilteredUsers(response.data.absentUsers);

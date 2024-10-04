@@ -64,7 +64,7 @@ const ViewTodayTeamAttendance = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `/api/attendance/getMyTeamMemberAttendanceStatus`
+          `${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`
         );
 
         if (response.data && response.data.onlineUserAttendanceRecord) {
@@ -86,7 +86,7 @@ const ViewTodayTeamAttendance = () => {
     const fetchAbsentUsers = async () => {
       try {
         const response = await axios.get(
-          `/api/attendance/getAllTodayAbsentUsers`
+          `${apiUrl}/api/attendance/getAllTodayAbsentUsers`
         );
         setAbsent(response.data.count);
       } catch (err) {
@@ -98,7 +98,7 @@ const ViewTodayTeamAttendance = () => {
     const fetchPresentUsers = async () => {
       try {
         const response = await axios.get(
-          `/api/attendance/getAllTodayPresentUsers`
+          `${apiUrl}/api/attendance/getAllTodayPresentUsers`
         );
 
         setPresent(response.data.presentUsers.length);

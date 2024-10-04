@@ -19,7 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../../../auth/AuthContext";
+
 
 
 const AddTeamLead = () => {
@@ -27,6 +27,7 @@ const AddTeamLead = () => {
   const [jobTypeOptions, setJobTypeOptions] = useState([]);
   const [designationOptions, setDesignationOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
   
 
   const { control, handleSubmit, register, formState: { errors } } = useForm({
@@ -46,7 +47,7 @@ const AddTeamLead = () => {
   useEffect(() => {
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await axios.get(`${apiUrl}/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id
@@ -59,7 +60,7 @@ const AddTeamLead = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await axios.get(`${apiUrl}/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id
@@ -72,7 +73,7 @@ const AddTeamLead = () => {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await axios.get(`${apiUrl}/api/role/getAllRoles`);
         const teamLeadRole = response.data.roles
           .filter(role => role.id === "2")
           .map(role => ({
@@ -104,7 +105,7 @@ const AddTeamLead = () => {
     console.log("Formatted Form Data:", formattedData);
 
     try {
-      await axios.post(`/api/user/create`, formattedData);
+      await axios.post(`${apiUrl}/api/user/create`, formattedData);
       toast.success("User created successfully");
       navigate("/dashboard/admin/team");
     } catch (error) {

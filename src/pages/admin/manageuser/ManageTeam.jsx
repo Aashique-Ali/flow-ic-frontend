@@ -44,7 +44,7 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "../../../auth/AuthContext";
+
 
 const ManageTeam = () => {
   const navigate = useNavigate();
@@ -57,12 +57,13 @@ const ManageTeam = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [requestsPerPage] = useState(10);
   const [roleOptions, setRoleOptions] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/user/getMyAllUsers`);
+        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
         console.log(response.data.myUsers);
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
@@ -157,7 +158,7 @@ const ManageTeam = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.put(`/api/user/delete/${id}`);
+      await axios.put(`${apiUrl}/api/user/delete/${id}`);
       toast.success("User deleted successfully");
       setRequests((prev) => prev.filter((request) => request._id !== id));
     } catch (error) {

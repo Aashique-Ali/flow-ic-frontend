@@ -53,7 +53,7 @@ const designationMap = {
 };
 
 const deleteAttendance = async (id) => {
-  await axios.delete(`/api/attendance/delete/${id}`);
+  await axios.delete(`${apiUrl}/api/attendance/delete/${id}`);
   toast.success("Attendance deleted successfully");
 };
 
@@ -68,13 +68,14 @@ const ViewTodayAttendance = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `/api/attendance/getMyTeamMemberAttendanceStatus`
+          `${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`
         );
 
         if (response.data && response.data.onlineUserAttendanceRecord) {
@@ -101,7 +102,7 @@ const ViewTodayAttendance = () => {
     const fetchAbsentUsers = async () => {
       try {
         const response = await axios.get(
-          `/api/attendance/getAllTodayAbsentUsers`
+          `${apiUrl}/api/attendance/getAllTodayAbsentUsers`
         );
 
         console.log("Absent Members ", response.data.count);
@@ -116,7 +117,7 @@ const ViewTodayAttendance = () => {
     const fetchPresentUsers = async () => {
       try {
         const response = await axios.get(
-          `/api/attendance/getAllTodayPresentUsers`
+          `${apiUrl}/api/attendance/getAllTodayPresentUsers`
         );
 
         setPresent(response.data.presentUsers.length);

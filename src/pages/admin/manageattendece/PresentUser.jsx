@@ -24,12 +24,13 @@ const PresentUser = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
+  const apiUrl = import.meta.env.VITE_API_URL;
  
   useEffect(() => {
     const fetchPresentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/attendance/getAllTodayPresentUsers`);
+        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayPresentUsers`);
         
         if (response.data && response.data.presentUsers) {
           setPresentUsers(response.data.presentUsers);
