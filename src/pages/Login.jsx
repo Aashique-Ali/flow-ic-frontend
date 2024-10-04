@@ -11,7 +11,8 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
-
+  const apiUrl = import.meta.env.VITE_API_URL;
+  console.log(apiUrl)
   const handleLogin = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
@@ -25,7 +26,7 @@ const Login = () => {
       return toast.warning("Please enter a valid email.");
 
     try {
-      const response = await axios.post("/api/user/login", { email, password });
+      const response = await axios.post(`${apiUrl}/api/user/login`, { email, password });
 
       if (response.status === 200) {
         const data = response.data;
