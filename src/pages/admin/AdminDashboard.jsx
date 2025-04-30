@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom"
 import {
   BriefcaseBusiness,
   CalendarCheck,
@@ -11,8 +11,10 @@ import {
   TrendingUp,
   User,
   View,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+  ClipboardList,
+} from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,45 +22,40 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
-import { toast } from "react-toastify";
-import logo from "../../assets/IC-logo-2.png";
-import { useAuth } from "../../auth/AuthContext";
-import axios from "axios";
+import { toast } from "react-toastify"
+import logo from "../../assets/IC-logo-2.png"
+import { useAuth } from "../../auth/AuthContext"
+import axios from "axios"
 
 const AdminDashboard = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const { userRole } = useAuth();
-  const { username } = useAuth();
-  const apiUrl = import.meta.env.VITE_API_URL;
-
-
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+  const { userRole } = useAuth()
+  const { username } = useAuth()
+  const apiUrl = import.meta.env.VITE_API_URL
 
   const handleLogout = async () => {
     try {
-      
-      const response = await axios.post(`${apiUrl}/api/user/logout`);
+      const response = await axios.post(`${apiUrl}/api/user/logout`)
 
       if (!response.status === 200) {
-        throw new Error("Logout failed. Please try again.");
+        throw new Error("Logout failed. Please try again.")
       }
-      
-      navigate("/");
-      
-      logout();
-      
-      toast.success("Logout successful");
 
+      navigate("/")
 
+      logout()
+
+      toast.success("Logout successful")
     } catch (error) {
       // toast.error(`An error occurred: ${error.message}`);
       toast.success("logout successfull")
     }
-  };
+  }
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr]   lg:grid-cols-[280px_1fr] bg-white">
@@ -99,7 +96,6 @@ const AdminDashboard = () => {
                 Manage Attendance
               </Link>
 
-
               <Link
                 to="/dashboard/admin/leaves"
                 className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
@@ -114,7 +110,13 @@ const AdminDashboard = () => {
                 <BriefcaseBusiness className="h-6 w-6 text-[#BA0D09]" />
                 Manage Projects
               </Link>
-
+              <Link
+                to="/dashboard/admin/tasks"
+                className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
+              >
+                <ClipboardList className="h-6 w-6 text-[#BA0D09]" />
+                Manage Tasks
+              </Link>
               <Link
                 to="/dashboard/admin/performance"
                 className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
@@ -167,6 +169,14 @@ const AdminDashboard = () => {
                 >
                   <User className="h-6 w-6 text-[#BA0D09]" />
                   Manage Users
+                </Link>
+
+                <Link
+                  to="/dashboard/admin/tasks"
+                  className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
+                >
+                  <ClipboardList className="h-6 w-6 text-[#BA0D09]" />
+                  Manage Tasks
                 </Link>
                 <Link
                   to="/dashboard/admin/leaves"
@@ -244,7 +254,7 @@ const AdminDashboard = () => {
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AdminDashboard;
+export default AdminDashboard

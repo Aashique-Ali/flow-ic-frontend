@@ -7,7 +7,6 @@ import {
   Menu,
   Package,
   User,
-  ClipboardList,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,7 +24,7 @@ import { toast } from "react-toastify"
 import logo from "../../assets/IC-logo-2.png"
 import axios from "axios"
 
-const TeamLeadDashboard = () => {
+const UserDashboard = () => {
   const { logout } = useAuth()
   const navigate = useNavigate()
   const { userRole } = useAuth()
@@ -40,9 +39,9 @@ const TeamLeadDashboard = () => {
         throw new Error("Logout failed. Please try again.")
       }
 
-      navigate("/")
-
       logout()
+
+      navigate("/")
 
       toast.success("Logout successful")
     } catch (error) {
@@ -57,7 +56,7 @@ const TeamLeadDashboard = () => {
           <div className="flex h-full max-h-screen flex-col gap-4 min-h-screen">
             <div className="flex h-14 items-center font-bold px-4 py-4 my-4 mx-4 lg:h-[80px] rounded-3xl lg:px-6  ">
               <Link
-                to="/dashboard/teamlead"
+                to="/dashboard/user"
                 className="flex items-center font-bold rounded-xl  hover:text-white transition-colors duration-300 ease-in-out"
               >
                 <img src={logo} alt="Logo" className="h-12 rounded-lg" />
@@ -67,7 +66,7 @@ const TeamLeadDashboard = () => {
             <div className="flex-1">
               <nav className="grid items-start px-4 text-sm font-medium lg:px-6">
                 <Link
-                  to="/dashboard/teamlead"
+                  to="/dashboard/user"
                   className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
                 >
                   <HomeIcon className="h-6 w-6 text-[#BA0D09]" />
@@ -75,48 +74,12 @@ const TeamLeadDashboard = () => {
                 </Link>
 
                 <Link
-                  to="/dashboard/teamlead/team"
-                  className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                >
-                  <User className="h-6 w-6 text-[#BA0D09]" />
-                  Manage Team
-                </Link>
-                <Link
-                  to="/dashboard/teamlead/task"
-                  className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                >
-                  <ClipboardList className="h-6 w-6 text-[#BA0D09]" />
-                  Manage Tasks
-                </Link>
-                {/* <Link
-                to="/dashboard/leaves"
-                className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-              >
-                <CalendarOff className="h-6 w-6 text-[#BA0D09]" />
-                Manage Leave
-              </Link> */}
-                <Link
-                  to="/dashboard/teamlead/attendance"
-                  className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                >
-                  <CalendarCheck className="h-6 w-6 text-[#BA0D09]" />
-                  Manage Attendance
-                </Link>
-
-                <Link
-                  to="/dashboard/teamlead/projects"
+                  to="/dashboard/user/tasks/add"
                   className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
                 >
                   <BriefcaseBusiness className="h-6 w-6 text-[#BA0D09]" />
-                  Create Project
+                  Add Task
                 </Link>
-                {/* <Link
-                to="/dashboard/teamlead/performance"
-                className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-              >
-                <TrendingUp className="h-6 w-6 text-[#BA0D09]" />
-                Performance
-              </Link> */}
               </nav>
             </div>
           </div>
@@ -138,52 +101,23 @@ const TeamLeadDashboard = () => {
                 <nav className="grid gap-2 text-lg font-medium">
                   <div className="flex h-14 items-center font-bold border-b px-2 lg:h-[60px] lg:px-6 bg-white">
                     <Link
-                      to="/dashboard/teamlead"
+                      to="/dashboard/user"
                       className="flex items-center font-bold gap-2 "
                     ></Link>
                   </div>
                   <Link
-                    to="/dashboard/teamlead"
+                    to="/dashboard/user"
                     className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
                   >
                     <HomeIcon className="h-5 w-5 text-[#BA0D09]" />
-                    Home
+                    Dashboard
                   </Link>
                   <Link
-                    to="/dashboard/teamlead/projects"
+                    to="/dashboard/user/tasks/add"
                     className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
                   >
                     <Package className="h-6 w-6 text-[#BA0D09]" />
-                    Manage Projects
-                  </Link>
-                  <Link
-                    to="/dashboard/teamlead/team"
-                    className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                  >
-                    <User className="h-6 w-6 text-[#BA0D09]" />
-                    Manage Users
-                  </Link>
-
-                  <Link
-                    to="/dashboard/teamlead/task"
-                    className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                  >
-                    <ClipboardList className="h-6 w-6 text-[#BA0D09]" />
-                    Manage Tasks
-                  </Link>
-                  <Link
-                    to="/dashboard/teamlead/leaves"
-                    className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                  >
-                    <Package className="h-6 w-6 text-[#BA0D09]" />
-                    Manage Leave
-                  </Link>
-                  <Link
-                    to="/dashboard/teamlead/performance"
-                    className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                  >
-                    <Package className="h-6 w-6 text-[#BA0D09]" />
-                    Performance
+                    Add Task
                   </Link>
                 </nav>
               </SheetContent>
@@ -220,19 +154,13 @@ const TeamLeadDashboard = () => {
                   {userRole === "1" && (
                     <p>
                       Welcome
-                      <span className="font-bold text-red-500">
-                        {" "}
-                        Admin{" "}
-                      </span>{" "}
+                      <span className="font-bold text-red-500">Admin</span>
                     </p>
                   )}
                   {userRole === "2" && (
                     <p>
                       Welcome
-                      <span className="font-bold text-red-500">
-                        {" "}
-                        Team Lead{" "}
-                      </span>
+                      <span className="font-bold text-red-500">Team Lead </span>
                     </p>
                   )}
                   {userRole === "3" && (
@@ -261,4 +189,4 @@ const TeamLeadDashboard = () => {
   )
 }
 
-export default TeamLeadDashboard
+export default UserDashboard

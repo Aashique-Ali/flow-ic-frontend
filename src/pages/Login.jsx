@@ -1,54 +1,69 @@
-import React, { useRef, useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import React, { useRef, useState } from "react"
+import axios from "axios"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../auth/AuthContext"
+import { use } from "react"
 
 const Login = () => {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
+  const [errorMessage, setErrorMessage] = useState("")
+  const navigate = useNavigate()
+  const { login } = useAuth()
+  const apiUrl = import.meta.env.VITE_API_URL
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
+    e.preventDefault()
+    const email = emailRef.current.value
+    const password = passwordRef.current.value
 
-    if (!email) return toast.warning("Please enter email");
-    if (!password) return toast.warning("Please enter password");
+    if (!email) return toast.warning("Please enter email")
+    if (!password) return toast.warning("Please enter password")
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email))
-      return toast.warning("Please enter a valid email.");
+      return toast.warning("Please enter a valid email.")
 
     try {
-      const response = await axios.post(`${apiUrl}/api/user/login`, { email, password },{withCredentials:true});
+      const response = await axios.post(
+        `/api/user/login`,
+        { email, password },
+        { withCredentials: true }
+      )
 
       if (response.status === 200) {
-        const data = response.data;
-        login(data.token, data.user_.role, data.user_.fullName);
+        const data = response.data
+        login(
+          data.token,
+          data.user_.role,
+          data.user_.fullName,
+          data.user_.companyId,
+          data.user_._id
+        )
 
+        console.log(data.user_.companyId)
         if (data.user_.role === "1") {
-          navigate("/dashboard/admin");
-        } else if (data.user_.role === "2") {
-          navigate("/dashboard/teamlead");
+          navigate("/dashboard/admin")
+        }
+        if (data.user_.role === "2") {
+          navigate("/dashboard/teamlead")
+        } else if (data.user_.role === "3") {
+          navigate("/dashboard/user")
         }
 
-        toast.success("Login successful");
+        toast.success("Login successful")
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
-        setErrorMessage(error.response.data.message);
-        toast.error(error.response.data.message);
+        setErrorMessage(error.response.data.message)
+        toast.error(error.response.data.message)
       } else {
-        toast.error("An unexpected error occurred. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.")
       }
     }
-  };
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 rounded-6xl shadow-md">
@@ -114,7 +129,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
