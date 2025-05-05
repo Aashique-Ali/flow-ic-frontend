@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/components/ui/breadcrumb"
 import {
   Table,
   TableBody,
@@ -15,26 +15,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import { Link } from "react-router-dom"
+import api from "@/lib/api"
 
 const jobTypeMap = {
   1: "Full Time",
   2: "Part Time",
   3: "Full Time Intern",
   4: "Part Time Intern",
-};
+}
 
 const roleMap = {
   1: "Admin",
   2: "Team Lead",
   3: "User",
-};
+}
 
 const designationMap = {
   1: "Administrator",
@@ -50,112 +51,105 @@ const designationMap = {
   11: "Senior SEO Expert",
   12: "Senior Backend Developer",
   13: "Junior Backend Developer",
-};
+}
 
 const deleteAttendance = async (id) => {
-  await axios.delete(`${apiUrl}/api/attendance/delete/${id}`);
-  toast.success("Attendance deleted successfully");
-};
+  await axios.delete(`${apiUrl}/api/attendance/delete/${id}`)
+  toast.success("Attendance deleted successfully")
+}
 
 const ViewTodayAttendance = () => {
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [present, setPresent] = useState(0);
-  const [absent, setAbsent] = useState(0);
-  const [totalUser, setTotalUser] = useState(0);
-  const [totalOnlineUsers, setTotalOnlineUsers] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const [searchTerm, setSearchTerm] = useState("");
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const [attendanceData, setAttendanceData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [present, setPresent] = useState(0)
+  const [absent, setAbsent] = useState(0)
+  const [totalUser, setTotalUser] = useState(0)
+  const [totalOnlineUsers, setTotalOnlineUsers] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  const [searchTerm, setSearchTerm] = useState("")
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchUserAttendance = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`
-        );
+        setLoading(true)
+        const response = await api.get(
+          `/attendance/getMyTeamMemberAttendanceStatus`
+        )
 
         if (response.data && response.data.onlineUserAttendanceRecord) {
-          const onlineCount = response.data.onlineUserAttendanceRecord.length;
+          const onlineCount = response.data.onlineUserAttendanceRecord.length
 
-          setTotalOnlineUsers(onlineCount);
+          setTotalOnlineUsers(onlineCount)
 
-          const totalUsers = response.data.totalUser;
+          const totalUsers = response.data.totalUser
 
-          setAttendanceData(response.data.onlineUserAttendanceRecord);
+          setAttendanceData(response.data.onlineUserAttendanceRecord)
 
-          setTotalUser(totalUsers);
+          setTotalUser(totalUsers)
         } else {
-          toast.error("No attendance data found");
+          toast.error("No attendance data found")
         }
       } catch (err) {
-        toast.error("An error occurred while fetching attendance data.");
-        console.error(err);
+        toast.error("An error occurred while fetching attendance data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayAbsentUsers`
-        );
+        const response = await api.get(`/attendance/getAllTodayAbsentUsers`)
 
-        console.log("Absent Members ", response.data.count);
+        console.log("Absent Members ", response.data.count)
 
-        setAbsent(response.data.count);
+        setAbsent(response.data.count)
       } catch (err) {
-        setError("An error occurred while fetching absent users data.");
-        console.error(err);
+        setError("An error occurred while fetching absent users data.")
+        console.error(err)
       }
-    };
+    }
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayPresentUsers`
-        );
+        const response = await api.get(`/attendance/getAllTodayPresentUsers`)
 
-        setPresent(response.data.presentUsers.length);
+        setPresent(response.data.presentUsers.length)
 
-        console.log("Present Memebers ", response.data.presentUsers.length);
+        console.log("Present Memebers ", response.data.presentUsers.length)
       } catch (err) {
-        setError("An error occurred while fetching present users data.");
-        console.error(err);
+        setError("An error occurred while fetching present users data.")
+        console.error(err)
       }
-    };
+    }
 
-    fetchAbsentUsers();
-    fetchPresentUsers();
-    fetchUserAttendance();
-  }, [deleteAttendance]);
+    fetchAbsentUsers()
+    fetchPresentUsers()
+    fetchUserAttendance()
+  }, [deleteAttendance])
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
+      setCurrentPage((prev) => prev - 1)
     }
-  };
+  }
 
   const handleNextPage = () => {
     if (currentPage < Math.ceil(filteredData.length / itemsPerPage)) {
-      setCurrentPage((prev) => prev + 1);
+      setCurrentPage((prev) => prev + 1)
     }
-  };
+  }
 
   // Filter data based on the search term
   const filteredData = attendanceData.filter((attendance) =>
     attendance.user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const currentItems = filteredData.slice(startIndex, startIndex + itemsPerPage)
 
   return (
     <>
@@ -270,7 +264,7 @@ const ViewTodayAttendance = () => {
                         <button
                           className="px-3 py-2 rounded-full  text-red-500 bg-red-300 hover:bg-red-100 transition-colors duration-200 ease-in-out flex items-center justify-center"
                           onClick={() => {
-                            deleteAttendance(attendance._id);
+                            deleteAttendance(attendance._id)
                           }}
                         >
                           <X className="w-4 h-4 text-xl font-bold" />
@@ -313,7 +307,7 @@ const ViewTodayAttendance = () => {
       </Card>
       <ToastContainer />
     </>
-  );
-};
+  )
+}
 
-export default ViewTodayAttendance;
+export default ViewTodayAttendance

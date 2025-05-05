@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
 import { useParams } from "react-router-dom"
 import { useAuth } from "@/auth/AuthContext"
+import api from "@/lib/api"
 
 const Taskdetail = () => {
   const [taskData, setTaskData] = useState(null)
@@ -18,7 +19,7 @@ const Taskdetail = () => {
     const fetchTaskAndBranchAndDepartment = async () => {
       try {
         // Fetch task
-        const { data } = await axios.get(`${apiUrl}/api/task/getTask/${id}`)
+        const { data } = await api.get(`/task/getTask/${id}`)
         if (!data.success) {
           toast.error("Task not found")
           return
@@ -27,17 +28,15 @@ const Taskdetail = () => {
 
         // Fetch branch name
         if (data.task.branchid) {
-          const branchRes = await axios.get(
-            `${apiUrl}/api/branch/view/${data.task.branchid}`
-          )
+          const branchRes = await api.get(`/branch/view/${data.task.branchid}`)
           if (branchRes.data.name) {
             setBranchName(branchRes.data.name)
           }
         }
 
         // Fetch all departments for company and match by ID
-        const deptRes = await axios.get(
-          `${apiUrl}/api/department/getDepartmentByCompanyId/${companyId}`
+        const deptRes = await api.get(
+          `/department/getDepartmentByCompanyId/${companyId}`
         )
         const departments = deptRes.data.departments || []
         const matchedDept = departments.find(

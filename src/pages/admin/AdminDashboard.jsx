@@ -30,6 +30,7 @@ import { toast } from "react-toastify"
 import logo from "../../assets/IC-logo-2.png"
 import { useAuth } from "../../auth/AuthContext"
 import axios from "axios"
+import api from "@/lib/api"
 
 const AdminDashboard = () => {
   const { logout } = useAuth()
@@ -40,7 +41,7 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/api/user/logout`)
+      const response = await api.post(`/user/logout`)
 
       if (!response.status === 200) {
         throw new Error("Logout failed. Please try again.")

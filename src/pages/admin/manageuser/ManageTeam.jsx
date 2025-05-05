@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import { Badge } from "@/components/ui/badge"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/breadcrumb"
+import { Button } from "@/components/ui/button"
 import {
   MoreHorizontalIcon,
   CalendarIcon,
@@ -17,21 +17,21 @@ import {
   SearchIcon,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
+} from "lucide-react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
@@ -39,32 +39,32 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 
-import "react-datepicker/dist/react-datepicker.css";
-import { toast } from "react-toastify";
-import { Skeleton } from "@/components/ui/skeleton";
-
+import "react-datepicker/dist/react-datepicker.css"
+import { toast } from "react-toastify"
+import { Skeleton } from "@/components/ui/skeleton"
+import api from "@/lib/api"
 
 const ManageTeam = () => {
-  const navigate = useNavigate();
-  const [requests, setRequests] = useState([]);
-  const [filteredRequests, setFilteredRequests] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [searchName, setSearchName] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [requestsPerPage] = useState(10);
-  const [roleOptions, setRoleOptions] = useState([]);
-    const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate()
+  const [requests, setRequests] = useState([])
+  const [filteredRequests, setFilteredRequests] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [searchName, setSearchName] = useState("")
+  const [selectedMonth, setSelectedMonth] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [requestsPerPage] = useState(10)
+  const [roleOptions, setRoleOptions] = useState([])
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
-        console.log(response.data.myUsers);
+        setLoading(true)
+        const response = await api.get(`/user/getMyAllUsers`)
+        console.log(response.data.myUsers)
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
             _id: user._id,
@@ -102,71 +102,71 @@ const ManageTeam = () => {
                 2: "Team Lead",
                 3: "User",
               }[user.role] || "N/A",
-          }));
+          }))
 
-          setRequests(formattedData);
-          setFilteredRequests(formattedData);
+          setRequests(formattedData)
+          setFilteredRequests(formattedData)
         } else {
-          setError("No data found");
+          setError("No data found")
         }
       } catch (err) {
-        setError("An error occurred while fetching attendance requests.");
-        console.error(err);
+        setError("An error occurred while fetching attendance requests.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchRequests();
-  }, []);
+    fetchRequests()
+  }, [])
 
   useEffect(() => {
-    filterRequests();
-  }, [searchName, selectedMonth]);
+    filterRequests()
+  }, [searchName, selectedMonth])
 
   const filterRequests = () => {
-    let filtered = requests;
+    let filtered = requests
     if (searchName) {
       filtered = filtered.filter((request) =>
         request.fullName.toLowerCase().includes(searchName.toLowerCase())
-      );
+      )
     }
 
-    setFilteredRequests(filtered);
-  };
+    setFilteredRequests(filtered)
+  }
 
-  const indexOfLastRequest = currentPage * requestsPerPage;
-  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const indexOfLastRequest = currentPage * requestsPerPage
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage
   const currentRequests = filteredRequests.slice(
     indexOfFirstRequest,
     indexOfLastRequest
-  );
+  )
 
   // navigate create user
 
   const navigateToCreateTeamLead = () => {
-    navigate("/dashboard/admin/create/createteamlead");
-  };
+    navigate("/dashboard/admin/create/createteamlead")
+  }
 
   // edit user
 
   const handleEdit = (id) => {
-    navigate(`/dashboard/admin/team/edit/${id}`);
-  };
+    navigate(`/dashboard/admin/team/edit/${id}`)
+  }
 
   // delete user
 
   const handleDelete = async (id) => {
     try {
-      await axios.put(`${apiUrl}/api/user/delete/${id}`);
-      toast.success("User deleted successfully");
-      setRequests((prev) => prev.filter((request) => request._id !== id));
+      await api.put(`/user/delete/${id}`)
+      toast.success("User deleted successfully")
+      setRequests((prev) => prev.filter((request) => request._id !== id))
     } catch (error) {
-      toast.error("Error deleting the user");
+      toast.error("Error deleting the user")
     }
-  };
+  }
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const getBadgeColor = (type, value) => {
     const colors = {
@@ -207,20 +207,20 @@ const ManageTeam = () => {
           "bg-blue-100 text-blue-800 text-center shadow-sm font-bold hover:bg-green-500 hover:text-white",
         User: "bg-green-100 text-green-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white ",
       },
-    };
+    }
 
     return (
       colors[type][value] ||
       "bg-red-100 text-red-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white"
-    );
-  };
+    )
+  }
 
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-red-500">{error}</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -409,7 +409,7 @@ const ManageTeam = () => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default ManageTeam;
+export default ManageTeam

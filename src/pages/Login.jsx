@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../auth/AuthContext"
 import { use } from "react"
+import api from "@/lib/api"
 
 const Login = () => {
   const emailRef = useRef(null)
@@ -27,8 +28,8 @@ const Login = () => {
       return toast.warning("Please enter a valid email.")
 
     try {
-      const response = await axios.post(
-        `/api/user/login`,
+      const response = await api.post(
+        `/user/login`,
         { email, password },
         { withCredentials: true }
       )

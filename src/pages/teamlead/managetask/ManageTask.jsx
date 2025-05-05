@@ -32,6 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import api from "@/lib/api"
 
 const ManageTasks = () => {
   const navigate = useNavigate()
@@ -46,7 +47,7 @@ const ManageTasks = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true)
-        const resp = await axios.get(`${apiUrl}/api/task/getAllTask`)
+        const resp = await api.get(`/task/getAllTask`)
         const rawTasks = resp.data.tasks
 
         const withBranchNames = await Promise.all(
@@ -55,9 +56,7 @@ const ManageTasks = () => {
             let branchName = "N/A"
             if (branchId) {
               try {
-                const br = await axios.get(
-                  `${apiUrl}/api/branch/view/${branchId}`
-                )
+                const br = await api.get(`/branch/view/${branchId}`)
                 branchName = br.data.name || branchName
               } catch (e) {
                 console.error("Failed to fetch branch", branchId, e)

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/components/ui/breadcrumb"
 import {
   Table,
   TableBody,
@@ -15,62 +15,63 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { useParams , Link } from "react-router-dom";
+} from "@/components/ui/table"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
+import { useParams, Link } from "react-router-dom"
+import api from "@/lib/api"
 
 const AttendanceDetails = () => {
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [userData, setUserData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [loading, setLoading] = useState(false);
-  const apiUrl = import.meta.env.VITE_API_URL;
-  let { id } = useParams();
+  const [attendanceData, setAttendanceData] = useState([])
+  const [userData, setUserData] = useState([])
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [loading, setLoading] = useState(false)
+  const apiUrl = import.meta.env.VITE_API_URL
+  let { id } = useParams()
 
   const fetchAttendanceData = async (date) => {
-    setLoading(true);
-    setAttendanceData([]);
+    setLoading(true)
+    setAttendanceData([])
     try {
       const month = date
         .toLocaleString("default", { month: "long" })
-        .toLowerCase();
-      const year = date.getFullYear();
+        .toLowerCase()
+      const year = date.getFullYear()
 
-      const response = await axios.get(
-        `${apiUrl}/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
-      );
+      const response = await api.get(
+        `/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
+      )
 
-      console.log(response.data.monthAttendance);
+      console.log(response.data.monthAttendance)
 
       if (response.data.success && response.data.monthAttendance.length > 0) {
-        setAttendanceData(response.data.monthAttendance);
+        setAttendanceData(response.data.monthAttendance)
       } else {
-        toast.error("No Record Available for the selected month.");
+        toast.error("No Record Available for the selected month.")
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchAttendanceData(selectedDate);
+    fetchAttendanceData(selectedDate)
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/user/getUserById/${id}`);
-        setUserData(response.data.user);
+        const response = await api.get(`/user/getUserById/${id}`)
+        setUserData(response.data.user)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
+    }
 
-    fetchUserInfo();
-  }, [selectedDate, id]);
+    fetchUserInfo()
+  }, [selectedDate, id])
 
   return (
     <>
@@ -161,7 +162,7 @@ const AttendanceDetails = () => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default AttendanceDetails;
+export default AttendanceDetails

@@ -39,6 +39,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useAuth } from "@/auth/AuthContext"
+import api from "@/lib/api"
 
 const ManageTasks = () => {
   const navigate = useNavigate()
@@ -55,7 +56,7 @@ const ManageTasks = () => {
     const fetchTasks = async () => {
       try {
         setLoading(true)
-        const resp = await axios.get(`${apiUrl}/api/task/getAllTask`)
+        const resp = await api.get(`/task/getAllTask`)
         const rawTasks = resp.data.tasks
 
         // Filter tasks by current user
@@ -69,9 +70,7 @@ const ManageTasks = () => {
             let branchName = "N/A"
             if (branchId) {
               try {
-                const br = await axios.get(
-                  `${apiUrl}/api/branch/view/${branchId}`
-                )
+                const br = await api.get(`/branch/view/${branchId}`)
                 branchName = br.data.name || branchName
               } catch (e) {
                 console.error("Failed to fetch branch", branchId, e)

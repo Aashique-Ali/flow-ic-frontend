@@ -1,98 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Eye, Clipboard } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
-
+import React, { useEffect, useState } from "react"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { User, Eye, Clipboard } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import axios from "axios"
+import api from "@/lib/api"
 
 const AdminHome = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const [projectCount, setProjectCount] = useState(12);
-  const [userCount, setUserCount] = useState(0);
-  const [totalOnlineUser, setTotalOnlineUser] = useState(0);
-  const [present, setPresent] = useState(0);
-  const [absent, setAbsent] = useState(0);
-  const [totalUser, setTotalUser] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  let token;
+  const apiUrl = import.meta.env.VITE_API_URL
+  const [projectCount, setProjectCount] = useState(12)
+  const [userCount, setUserCount] = useState(0)
+  const [totalOnlineUser, setTotalOnlineUser] = useState(0)
+  const [present, setPresent] = useState(0)
+  const [absent, setAbsent] = useState(0)
+  const [totalUser, setTotalUser] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  let token
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        setLoading(true);
-        let token=localStorage.getItem("authToken")
-        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`,
-        { headers: {
-          Authorization: `Bearer ${token}` 
-        }});
+        setLoading(true)
+        let token = localStorage.getItem("authToken")
+        const response = await api.get(`/user/getMyAllUsers`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         if (response.data && response.data.myUsers) {
-          setUserCount(response.data.myUsers.length);
+          setUserCount(response.data.myUsers.length)
         } else {
-          setError("No user data found");
+          setError("No user data found")
         }
       } catch (err) {
-        setError("An error occurred while fetching user data.");
-        console.error(err);
+        setError("An error occurred while fetching user data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchUserAttendance = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`,
-          { headers: {
-            Authorization: `Bearer ${token}` 
-          }});
+        setLoading(true)
+        const response = await api.get(
+          `/attendance/getMyTeamMemberAttendanceStatus`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         if (response.data && response.data.onlineUserAttendanceRecord) {
-          setTotalOnlineUser(response.data.onlineUserAttendanceRecord.length);
-          setTotalUser(response.data.totalUser);
+          setTotalOnlineUser(response.data.onlineUserAttendanceRecord.length)
+          setTotalUser(response.data.totalUser)
         } else {
-          setError("No attendance data found");
+          setError("No attendance data found")
         }
       } catch (err) {
-        setError("An error occurred while fetching attendance data.");
-        console.error(err);
+        setError("An error occurred while fetching attendance data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers`,
-          { headers: {
-            Authorization: `Bearer ${token}` 
-          }});
-        setAbsent(response.data.count);
+        const response = await api.get(`/attendance/getAllTodayAbsentUsers`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setAbsent(response.data.count)
       } catch (err) {
-        setError("An error occurred while fetching absent users data.");
-        console.error(err);
+        setError("An error occurred while fetching absent users data.")
+        console.error(err)
       }
-    };
+    }
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayPresentUsers`,
-          { headers: {
-            Authorization: `Bearer ${token}` 
-          }});
-        setPresent(response.data.presentUsers.length);
+        const response = await api.get(`/attendance/getAllTodayPresentUsers`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setPresent(response.data.presentUsers.length)
       } catch (err) {
-        setError("An error occurred while fetching present users data.");
-        console.error(err);
+        setError("An error occurred while fetching present users data.")
+        console.error(err)
       }
-    };
+    }
 
-    
-    fetchUserData();
-    fetchUserAttendance();
-    fetchAbsentUsers();
-    fetchPresentUsers();
-  }, []); 
-
+    fetchUserData()
+    fetchUserAttendance()
+    fetchAbsentUsers()
+    fetchPresentUsers()
+  }, [])
 
   const cardsData = [
     {
@@ -125,7 +130,7 @@ const AdminHome = () => {
       link: "/dashboard/admin/projects",
       icon: <User className="text-[#BA0D09] h-6 w-6" />,
     },
-  ];
+  ]
 
   return (
     <>
@@ -182,7 +187,7 @@ const AdminHome = () => {
         ))}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default AdminHome;
+export default AdminHome

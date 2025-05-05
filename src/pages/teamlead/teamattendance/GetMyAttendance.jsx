@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -8,28 +8,28 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+} from "@/components/ui/table"
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
+} from "@/components/ui/breadcrumb"
+import api from "@/lib/api"
 
 const GetMyAttendance = () => {
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const [attendanceData, setAttendanceData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
       try {
-        setLoading(true);
-        const today = new Date();
+        setLoading(true)
+        const today = new Date()
         const monthNames = [
           "january",
           "february",
@@ -43,23 +43,23 @@ const GetMyAttendance = () => {
           "october",
           "november",
           "december",
-        ];
+        ]
 
-        const currentMonth = monthNames[today.getMonth()];
+        const currentMonth = monthNames[today.getMonth()]
 
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getMyMonthAttendance/${currentMonth}`
-        );
-        setAttendanceData(response.data.monthAttendance);
+        const response = await api.get(
+          `/attendance/getMyMonthAttendance/${currentMonth}`
+        )
+        setAttendanceData(response.data.monthAttendance)
       } catch (error) {
-        toast.error("Error fetching attendance data.");
+        toast.error("Error fetching attendance data.")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchAttendanceData();
-  }, []);
+    fetchAttendanceData()
+  }, [])
 
   return (
     <>
@@ -136,7 +136,7 @@ const GetMyAttendance = () => {
       </Card>
       <ToastContainer />
     </>
-  );
-};
+  )
+}
 
-export default GetMyAttendance;
+export default GetMyAttendance

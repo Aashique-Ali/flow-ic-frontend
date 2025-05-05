@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -8,65 +8,66 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+} from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
+} from "@/components/ui/breadcrumb"
+import { Link } from "react-router-dom"
+import api from "@/lib/api"
 
 const AbsentUser = () => {
-  const [absentUsers, setAbsentUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const [absentUsers, setAbsentUsers] = useState([])
+  const [filteredUsers, setFilteredUsers] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const usersPerPage = 10
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchAbsentUsers = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers`);
+        setLoading(true)
+        const response = await api.get(`/attendance/getAllTodayAbsentUsers`)
         if (response.data && response.data.absentUsers) {
-          setAbsentUsers(response.data.absentUsers);
-          setFilteredUsers(response.data.absentUsers);
+          setAbsentUsers(response.data.absentUsers)
+          setFilteredUsers(response.data.absentUsers)
         } else {
-          toast.error("No absent users data found");
+          toast.error("No absent users data found")
         }
       } catch (err) {
-        toast.error("An error occurred while fetching absent users data.");
-        console.error(err);
+        toast.error("An error occurred while fetching absent users data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchAbsentUsers();
-  }, []);
+    }
+    fetchAbsentUsers()
+  }, [])
 
   // Search logic
   useEffect(() => {
     const results = absentUsers.filter((user) =>
       user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredUsers(results);
-    setCurrentPage(1);
-  }, [searchTerm, absentUsers]);
+    )
+    setFilteredUsers(results)
+    setCurrentPage(1)
+  }, [searchTerm, absentUsers])
 
   // Pagination logic
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const indexOfLastUser = currentPage * usersPerPage
+  const indexOfFirstUser = indexOfLastUser - usersPerPage
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser)
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
 
   return (
     <>
@@ -160,7 +161,7 @@ const AbsentUser = () => {
       </Card>
       <ToastContainer />
     </>
-  );
-};
+  )
+}
 
-export default AbsentUser;
+export default AbsentUser

@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import { Badge } from "@/components/ui/badge"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/breadcrumb"
+import { Button } from "@/components/ui/button"
 import {
   ChevronLeft,
   ChevronRight,
   MoreHorizontalIcon,
   SearchIcon,
-} from "lucide-react";
+} from "lucide-react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
@@ -37,30 +37,28 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "react-toastify";
+} from "@/components/ui/table"
+import { Skeleton } from "@/components/ui/skeleton"
+import { toast } from "react-toastify"
+import api from "@/lib/api"
 
 const ManageTeamAttendance = () => {
-  const navigate = useNavigate();
-  const [requests, setRequests] = useState([]);
-  const [filteredRequests, setFilteredRequests] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [searchName, setSearchName] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [requestsPerPage] = useState(10);
-  const apiUrl = import.meta.env.VITE_API_URL;
-  
-
+  const navigate = useNavigate()
+  const [requests, setRequests] = useState([])
+  const [filteredRequests, setFilteredRequests] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [searchName, setSearchName] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [requestsPerPage] = useState(10)
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
-        
-        
+        setLoading(true)
+        const response = await api.get(`/user/getMyAllUsers`)
+
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
             _id: user._id,
@@ -98,57 +96,57 @@ const ManageTeamAttendance = () => {
                 2: "Team Lead",
                 3: "User",
               }[user.role] || "N/A",
-          }));
+          }))
 
-          setRequests(formattedData);
-          setFilteredRequests(formattedData);
+          setRequests(formattedData)
+          setFilteredRequests(formattedData)
         } else {
-          setError("No data found");
+          setError("No data found")
         }
       } catch (err) {
-        setError("An error occurred while fetching attendance requests.");
-        console.error(err);
+        setError("An error occurred while fetching attendance requests.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchRequests();
-  }, []);
+    fetchRequests()
+  }, [])
 
   useEffect(() => {
-    filterRequests();
-  }, [searchName]);
+    filterRequests()
+  }, [searchName])
 
   const filterRequests = () => {
-    let filtered = requests;
+    let filtered = requests
     if (searchName) {
       filtered = filtered.filter((request) =>
         request.fullName.toLowerCase().includes(searchName.toLowerCase())
-      );
+      )
     }
 
-    setFilteredRequests(filtered);
-  };
+    setFilteredRequests(filtered)
+  }
 
-  const indexOfLastRequest = currentPage * requestsPerPage;
-  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const indexOfLastRequest = currentPage * requestsPerPage
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage
   const currentRequests = filteredRequests.slice(
     indexOfFirstRequest,
     indexOfLastRequest
-  );
+  )
 
   const handleDelete = async (id) => {
     try {
-      await axios.put(`${apiUrl}/api/user/delete/${id}`);
-      toast.success("User deleted successfully");
-      setRequests((prev) => prev.filter((request) => request._id !== id));
+      await api.put(`/user/delete/${id}`)
+      toast.success("User deleted successfully")
+      setRequests((prev) => prev.filter((request) => request._id !== id))
     } catch (error) {
-      toast.error("Error deleting the user");
+      toast.error("Error deleting the user")
     }
-  };
+  }
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const getBadgeColor = (type, value) => {
     const colors = {
@@ -189,13 +187,13 @@ const ManageTeamAttendance = () => {
           "bg-blue-100 text-blue-800 text-center shadow-sm font-bold hover:bg-green-500 hover:text-white",
         User: "bg-green-100 text-green-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white ",
       },
-    };
+    }
 
     return (
       colors[type][value] ||
       "bg-red-100 text-red-800 text-center shadow-md font-bold hover:bg-green-500 hover:text-white"
-    );
-  };
+    )
+  }
 
   return (
     <>
@@ -233,15 +231,17 @@ const ManageTeamAttendance = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-[#0067B8] text-2xl font-[Liberation Mono]" >View List Of Team Members </CardTitle>
-              <CardDescription
-              className="text-[#000] font-lg font-[Liberation Mono]">
+              <CardTitle className="text-[#0067B8] text-2xl font-[Liberation Mono]">
+                View List Of Team Members{" "}
+              </CardTitle>
+              <CardDescription className="text-[#000] font-lg font-[Liberation Mono]">
                 To Check Monthly Report Attendance
-                <span className="text-red-500 font-bold"> Click
-                User Record. </span>
+                <span className="text-red-500 font-bold">
+                  {" "}
+                  Click User Record.{" "}
+                </span>
               </CardDescription>
             </div>
-
           </div>
         </CardHeader>
         <CardContent>
@@ -297,7 +297,9 @@ const ManageTeamAttendance = () => {
                     key={request._id}
                     className="cursor-pointer hover:bg-gray-50 rounded-3xl"
                     onClick={() => {
-                      navigate(`/dashboard/teamlead/teamattendencedetails/${request._id}`);
+                      navigate(
+                        `/dashboard/teamlead/teamattendencedetails/${request._id}`
+                      )
                     }}
                   >
                     <TableCell>{request.fullName}</TableCell>
@@ -340,7 +342,7 @@ const ManageTeamAttendance = () => {
                             onClick={() => {
                               navigate(
                                 `/dashboard/admin/attendencedetails/${request._id}`
-                              );
+                              )
                             }}
                           >
                             <Link to="#">View Attendece</Link>
@@ -390,10 +392,7 @@ const ManageTeamAttendance = () => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default ManageTeamAttendance;
-
-
-
+export default ManageTeamAttendance

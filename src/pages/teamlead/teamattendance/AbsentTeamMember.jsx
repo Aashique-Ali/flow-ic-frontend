@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -8,62 +8,69 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Breadcrumb, BreadcrumbItem , BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
-
+} from "@/components/ui/table"
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Link } from "react-router-dom"
+import api from "@/lib/api"
 
 const AbsentTeamMember = () => {
-  const [absentUsers, setAbsentUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const [absentUsers, setAbsentUsers] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const apiUrl = import.meta.env.VITE_API_URL
 
-  const pageSize = 10; 
+  const pageSize = 10
 
   useEffect(() => {
     const fetchAbsentUsers = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers?page=${currentPage}&size=${pageSize}`);
-       
+        setLoading(true)
+        const response = await api.get(
+          `/attendance/getAllTodayAbsentUsers?page=${currentPage}&size=${pageSize}`
+        )
+
         if (response.data && response.data.absentUsers) {
-          setAbsentUsers(response.data.absentUsers);
-          setTotalPages(response.data.totalPages || 1);
+          setAbsentUsers(response.data.absentUsers)
+          setTotalPages(response.data.totalPages || 1)
         } else {
-          toast.error("No absent users data found");
+          toast.error("No absent users data found")
         }
       } catch (err) {
-        toast.error("An error occurred while fetching absent users data.");
-        console.error(err);
+        toast.error("An error occurred while fetching absent users data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchAbsentUsers();
-  }, [currentPage]);
+    fetchAbsentUsers()
+  }, [currentPage])
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1)
     }
-  };
+  }
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1)
     }
-  };
+  }
 
   return (
     <>
-         <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -71,7 +78,10 @@ const AbsentTeamMember = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <Link to="/dashboard/teamlead/viewtodayteamattendence"> Team Attendance</Link>
+              <Link to="/dashboard/teamlead/viewtodayteamattendence">
+                {" "}
+                Team Attendance
+              </Link>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -79,7 +89,9 @@ const AbsentTeamMember = () => {
 
       <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader className="flex justify-between items-center">
-          <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono]">Today Absent Team Members </CardTitle>
+          <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono]">
+            Today Absent Team Members{" "}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           {loading ? (
@@ -104,14 +116,16 @@ const AbsentTeamMember = () => {
                       key={user._id}
                       className="hover:bg-gray-50 transition-colors duration-200"
                     >
-                      <TableCell className="py-2 px-4">{user.fullName}</TableCell>
-                     
+                      <TableCell className="py-2 px-4">
+                        {user.fullName}
+                      </TableCell>
+
                       <TableCell className="py-2 px-4">
                         <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-blue-200 text-blue-800">
                           {user.jobType}
                         </span>
                       </TableCell>
-                      
+
                       <TableCell className="py-2 px-4">
                         <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-orange-200 text-orange-800">
                           {user.designation}
@@ -125,10 +139,9 @@ const AbsentTeamMember = () => {
                 <Button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                 variant="ghost"
+                  variant="ghost"
                 >
-                  <ChevronLeft  />
-              
+                  <ChevronLeft />
                 </Button>
                 <span className="text-gray-600">
                   Page {currentPage} of {totalPages}
@@ -138,7 +151,6 @@ const AbsentTeamMember = () => {
                   disabled={currentPage === totalPages}
                   variant="ghost"
                 >
-                
                   <ChevronRight />
                 </Button>
               </div>
@@ -148,7 +160,7 @@ const AbsentTeamMember = () => {
       </Card>
       <ToastContainer />
     </>
-  );
-};
+  )
+}
 
-export default AbsentTeamMember;
+export default AbsentTeamMember

@@ -1,33 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 
-import axios from "axios";
-import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"
+import { Badge } from "@/components/ui/badge"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/components/ui/breadcrumb"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
-import { ChevronLeft, ChevronRight, LoaderCircle, MoreHorizontalIcon, SearchIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LoaderCircle,
+  MoreHorizontalIcon,
+  SearchIcon,
+} from "lucide-react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
@@ -35,19 +41,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Avatar } from "@/components/ui/avatar";
+} from "@/components/ui/table"
+import { Avatar } from "@/components/ui/avatar"
+import api from "@/lib/api"
 
 const ManageLeave = () => {
-  const navigate = useNavigate();
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const requestsPerPage = 5;
+  const navigate = useNavigate()
+  const [requests, setRequests] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState("")
+  const requestsPerPage = 5
 
-  
   const request = [
     {
       id: "1",
@@ -63,7 +69,7 @@ const ManageLeave = () => {
       type: "Leave",
       reason: "Family event",
       approval: "pending",
-  },
+    },
     {
       id: "1",
       teamhead_id: "101",
@@ -78,7 +84,7 @@ const ManageLeave = () => {
       type: "Leave",
       reason: "Family event",
       approval: "pending",
-  },
+    },
     {
       id: "1",
       teamhead_id: "101",
@@ -93,16 +99,14 @@ const ManageLeave = () => {
       type: "Leave",
       reason: "Family event",
       approval: "pending",
-  },
-    ]
-
- 
+    },
+  ]
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get('/api/leave/getAllLeaves');
+        setLoading(true)
+        const response = await api.get("/leave/getAllLeaves")
         const data = response.data.allLeaves.map((leave) => ({
           id: leave._id,
           teamhead_id: leave.teamHead._id,
@@ -117,36 +121,40 @@ const ManageLeave = () => {
           reason: leave.description,
           approval: leave.status || "pending",
           avatar: "https://via.placeholder.com/50",
-        }));
-        setRequests(request);
+        }))
+        setRequests(request)
       } catch (err) {
-        setError("An error occurred while fetching Leaves requests.");
-        console.error(err);
+        setError("An error occurred while fetching Leaves requests.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchRequests();
-  }, []);
+    fetchRequests()
+  }, [])
 
-  const indexOfLastRequest = currentPage * requestsPerPage;
-  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
-  const currentRequests = requests.slice(indexOfFirstRequest, indexOfLastRequest);
+  const indexOfLastRequest = currentPage * requestsPerPage
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage
+  const currentRequests = requests.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  )
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
-  const filteredRequests = currentRequests.filter((request) =>
-    request.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    request.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredRequests = currentRequests.filter(
+    (request) =>
+      request.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      request.role.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoaderCircle className="h-10 w-10 text-green-500 animate-spin" />
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -154,7 +162,7 @@ const ManageLeave = () => {
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-red-500">{error}</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -184,16 +192,25 @@ const ManageLeave = () => {
 
       <Card className="w-full rounded-3xl shadow-lg">
         <CardHeader>
-          <CardTitle className="text-[#0067B8] text-3xl"> Team Leave Management </CardTitle>
+          <CardTitle className="text-[#0067B8] text-3xl">
+            {" "}
+            Team Leave Management{" "}
+          </CardTitle>
           <CardDescription>
             Check Leave Request Details by Clicking on a User Record.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex space-x-4 mb-4">
-            <Badge variant="outline" className="bg-yellow-100 text-yellow-700">Pending</Badge>
-            <Badge variant="outline" className="bg-green-100 text-green-700">Approved</Badge>
-            <Badge variant="outline" className="bg-red-100 text-red-700">Rejected</Badge>
+            <Badge variant="outline" className="bg-yellow-100 text-yellow-700">
+              Pending
+            </Badge>
+            <Badge variant="outline" className="bg-green-100 text-green-700">
+              Approved
+            </Badge>
+            <Badge variant="outline" className="bg-red-100 text-red-700">
+              Rejected
+            </Badge>
           </div>
 
           {/* Table */}
@@ -218,14 +235,20 @@ const ManageLeave = () => {
                 <TableRow
                   key={request.userid}
                   className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => navigate(`/dashboard/admin/managetimedetails/${request.userid}`)}
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/admin/managetimedetails/${request.userid}`
+                    )
+                  }
                 >
                   <TableCell>
                     <div className="flex items-center space-x-2">
                       <Avatar src={request.avatar} alt={request.name} />
                       <div>
                         <div className="font-medium">{request.name}</div>
-                        <div className="text-sm text-gray-500">{request.role}</div>
+                        <div className="text-sm text-gray-500">
+                          {request.role}
+                        </div>
                       </div>
                     </div>
                   </TableCell>
@@ -245,22 +268,38 @@ const ManageLeave = () => {
                           : "warning"
                       }
                     >
-                      {request.approval.charAt(0).toUpperCase() + request.approval.slice(1)}
+                      {request.approval.charAt(0).toUpperCase() +
+                        request.approval.slice(1)}
                     </Badge>
                   </TableCell>
 
-                  
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <Button
+                          aria-haspopup="true"
+                          size="icon"
+                          variant="ghost"
+                        >
                           <MoreHorizontalIcon />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/Leaves/edit/${request._id}`)}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/Leaves/delete/${request._id}`)}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/dashboard/Leaves/edit/${request._id}`)
+                          }
+                        >
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/dashboard/Leaves/delete/${request._id}`)
+                          }
+                        >
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -278,9 +317,14 @@ const ManageLeave = () => {
             >
               <ChevronLeft />
             </Button>
-            <span>Page {currentPage} of {Math.ceil(requests.length / requestsPerPage)}</span>
+            <span>
+              Page {currentPage} of{" "}
+              {Math.ceil(requests.length / requestsPerPage)}
+            </span>
             <Button
-              disabled={currentPage === Math.ceil(requests.length / requestsPerPage)}
+              disabled={
+                currentPage === Math.ceil(requests.length / requestsPerPage)
+              }
               onClick={() => paginate(currentPage + 1)}
               variant="ghost"
             >
@@ -290,7 +334,7 @@ const ManageLeave = () => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default ManageLeave;
+export default ManageLeave

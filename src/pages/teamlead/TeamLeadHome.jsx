@@ -1,90 +1,86 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Eye, Star, Clipboard } from "lucide-react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-
+import React, { useEffect, useState } from "react"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { User, Eye, Star, Clipboard } from "lucide-react"
+import { Link } from "react-router-dom"
+import axios from "axios"
+import api from "@/lib/api"
 
 const TeamLeadHome = () => {
-  const [projectCount, setProjectCount] = useState(12);
-  const [userCount, setUserCount] = useState(0);
-  const [totalOnlineUser, setTotalOnlineUser] = useState(0);
-  const [present, setPresent] = useState(0);
-  const [absent, setAbsent] = useState(0);
-  const [totalUser, setTotalUser] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const [projectCount, setProjectCount] = useState(12)
+  const [userCount, setUserCount] = useState(0)
+  const [totalOnlineUser, setTotalOnlineUser] = useState(0)
+  const [present, setPresent] = useState(0)
+  const [absent, setAbsent] = useState(0)
+  const [totalUser, setTotalUser] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`);
+        setLoading(true)
+        const response = await api.get(`/user/getMyAllUsers`)
         if (response.data && response.data.myUsers) {
-          setUserCount(response.data.myUsers.length);
+          setUserCount(response.data.myUsers.length)
         } else {
-          setError("No user data found");
+          setError("No user data found")
         }
       } catch (err) {
-        setError("An error occurred while fetching user data.");
-        console.error(err);
+        setError("An error occurred while fetching user data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchUserAttendance = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`
-        );
+        setLoading(true)
+        const response = await api.get(
+          `/attendance/getMyTeamMemberAttendanceStatus`
+        )
         if (response.data && response.data.onlineUserAttendanceRecord) {
-          const onlineCount = response.data.onlineUserAttendanceRecord.length;
-          setTotalOnlineUser(onlineCount);
-          const totalUsers = response.data.totalUser;
-          setTotalUser(totalUsers);
+          const onlineCount = response.data.onlineUserAttendanceRecord.length
+          setTotalOnlineUser(onlineCount)
+          const totalUsers = response.data.totalUser
+          setTotalUser(totalUsers)
         } else {
-          setError("No attendance data found");
+          setError("No attendance data found")
         }
       } catch (err) {
-        setError("An error occurred while fetching attendance data.");
-        console.error(err);
+        setError("An error occurred while fetching attendance data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayAbsentUsers`
-        );
-        setAbsent(response.data.count);
+        const response = await api.get(`/attendance/getAllTodayAbsentUsers`)
+        setAbsent(response.data.count)
       } catch (err) {
-        setError("An error occurred while fetching absent users data.");
-        console.error(err);
+        setError("An error occurred while fetching absent users data.")
+        console.error(err)
       }
-    };
+    }
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayPresentUsers`
-        );
-        setPresent(response.data.presentUsers.length);
+        const response = await api.get(`/attendance/getAllTodayPresentUsers`)
+        setPresent(response.data.presentUsers.length)
       } catch (err) {
-        setError("An error occurred while fetching present users data.");
-        console.error(err);
+        setError("An error occurred while fetching present users data.")
+        console.error(err)
       }
-    };
+    }
 
-    fetchAbsentUsers();
-    fetchPresentUsers();
-    fetchUserData();
-    fetchUserAttendance();
-  }, []);
+    fetchAbsentUsers()
+    fetchPresentUsers()
+    fetchUserData()
+    fetchUserAttendance()
+  }, [])
 
   const cardsData = [
     {
@@ -117,7 +113,7 @@ const TeamLeadHome = () => {
       link: "/dashboard/teamlead/absentmembers",
       icon: <User className="text-[#BA0D09] h-6 w-6" />,
     },
-  ];
+  ]
 
   return (
     <>
@@ -155,7 +151,7 @@ const TeamLeadHome = () => {
         ))}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default TeamLeadHome;
+export default TeamLeadHome

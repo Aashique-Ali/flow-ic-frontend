@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/components/ui/breadcrumb"
 import {
   Table,
   TableBody,
@@ -15,25 +15,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
+import api from "@/lib/api"
 
 const jobTypeMap = {
   1: "Full Time",
   2: "Part Time",
   3: "Full Time Intern",
   4: "Part Time Intern",
-};
+}
 
 const roleMap = {
   1: "Admin",
   2: "Team Lead",
   3: "User",
-};
+}
 
 const designationMap = {
   1: "Administrator",
@@ -49,69 +50,65 @@ const designationMap = {
   11: "Senior SEO Expert",
   12: "Senior Backend Developer",
   13: "Junior Backend Developer",
-};
+}
 
 const ViewTodayTeamAttendance = () => {
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [present, setPresent] = useState(0);
-  const [absent, setAbsent] = useState(0);
-  const [totalOnlineUser, setTotalOnlineUser] = useState(0);
-  const [totalUser, selectedUser] = useState(0);
+  const [attendanceData, setAttendanceData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [present, setPresent] = useState(0)
+  const [absent, setAbsent] = useState(0)
+  const [totalOnlineUser, setTotalOnlineUser] = useState(0)
+  const [totalUser, selectedUser] = useState(0)
 
   useEffect(() => {
     const fetchUserAttendance = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`
-        );
+        setLoading(true)
+        const response = await api.get(
+          `/attendance/getMyTeamMemberAttendanceStatus`
+        )
 
         if (response.data && response.data.onlineUserAttendanceRecord) {
-          const onlineCount = response.data.onlineUserAttendanceRecord.length;
+          const onlineCount = response.data.onlineUserAttendanceRecord.length
 
-          setAttendanceData(response.data.onlineUserAttendanceRecord);
-          setTotalOnlineUser(onlineCount);
+          setAttendanceData(response.data.onlineUserAttendanceRecord)
+          setTotalOnlineUser(onlineCount)
         } else {
-          toast.error("No attendance data found");
+          toast.error("No attendance data found")
         }
       } catch (err) {
-        toast.error("An error occurred while fetching attendance data.");
-        console.error(err);
+        toast.error("An error occurred while fetching attendance data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayAbsentUsers`
-        );
-        setAbsent(response.data.count);
+        const response = await api.get(`/attendance/getAllTodayAbsentUsers`)
+        setAbsent(response.data.count)
       } catch (err) {
-        setError("An error occurred while fetching absent users data.");
-        console.error(err);
+        setError("An error occurred while fetching absent users data.")
+        console.error(err)
       }
-    };
+    }
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayPresentUsers`
-        );
+        const response = await api.get(`/attendance/getAllTodayPresentUsers`)
 
-        setPresent(response.data.presentUsers.length);
+        setPresent(response.data.presentUsers.length)
       } catch (err) {
-        setError("An error occurred while fetching present users data.");
-        console.error(err);
+        setError("An error occurred while fetching present users data.")
+        console.error(err)
       }
-    };
+    }
 
-    fetchAbsentUsers();
-    fetchPresentUsers();
-    fetchUserAttendance();
-  }, []);
+    fetchAbsentUsers()
+    fetchPresentUsers()
+    fetchUserAttendance()
+  }, [])
 
   return (
     <>
@@ -220,7 +217,7 @@ const ViewTodayTeamAttendance = () => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default ViewTodayTeamAttendance;
+export default ViewTodayTeamAttendance

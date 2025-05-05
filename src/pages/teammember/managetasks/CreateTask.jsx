@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/auth/AuthContext"
+import api from "@/lib/api"
 
 const AddTask = () => {
   const { companyId, authToken, username, userId } = useAuth()
@@ -59,10 +60,8 @@ const AddTask = () => {
     const fetchOptions = async () => {
       try {
         const [departmentRes, branchRes] = await Promise.all([
-          axios.get(
-            `${apiUrl}/api/department/getDepartmentByCompanyId/${companyId}`
-          ),
-          axios.get(`${apiUrl}/api/branch/getBranchByCompanyId/${companyId}`),
+          api.get(`/department/getDepartmentByCompanyId/${companyId}`),
+          api.get(`/branch/getBranchByCompanyId/${companyId}`),
         ])
 
         setDepartmentOptions(
@@ -90,7 +89,7 @@ const AddTask = () => {
       if (username) setValue("username", username)
       if (userId) setValue("assignMember", userId)
     }
-  }, [companyId, username, userId, apiUrl, setValue, authToken])
+  }, [companyId, username, userId, setValue, authToken])
 
   const onSubmit = async (data) => {
     // Manual validation for required dropdowns and file
@@ -133,7 +132,7 @@ const AddTask = () => {
     }
 
     try {
-      await axios.post(`${apiUrl}/api/task/create`, formData, { headers })
+      await api.post(`/task/create`, formData, { headers })
       toast.success("Task created successfully")
 
       setTimeout(() => {

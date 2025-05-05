@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -8,66 +8,65 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+} from "@/components/ui/table"
+import "react-toastify/dist/ReactToastify.css"
+import axios from "axios"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
-
+} from "@/components/ui/breadcrumb"
+import { Link } from "react-router-dom"
+import api from "@/lib/api"
 
 const PresentTeamMember = () => {
-  const [presentUsers, setPresentUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 10;
-  const apiUrl = import.meta.env.VITE_API_URL;
-
+  const [presentUsers, setPresentUsers] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const pageSize = 10
+  const apiUrl = import.meta.env.VITE_API_URL
 
   useEffect(() => {
     const fetchPresentUsers = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}/api/attendance/getAllTodayPresentUsers?page=${currentPage}&size=${pageSize}`
-        );
+        setLoading(true)
+        const response = await api.get(
+          `/attendance/getAllTodayPresentUsers?page=${currentPage}&size=${pageSize}`
+        )
 
         if (response.data && response.data.presentUsers) {
-          setPresentUsers(response.data.presentUsers);
-          setTotalPages(response.data.totalPages || 1);
+          setPresentUsers(response.data.presentUsers)
+          setTotalPages(response.data.totalPages || 1)
         } else {
-          toast.error("No present users data found");
+          toast.error("No present users data found")
         }
       } catch (err) {
-        toast.error("An error occurred while fetching present users data.");
-        console.error(err);
+        toast.error("An error occurred while fetching present users data.")
+        console.error(err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchPresentUsers();
-  }, [currentPage]);
+    fetchPresentUsers()
+  }, [currentPage])
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1)
     }
-  };
+  }
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1)
     }
-  };
+  }
 
   return (
     <>
@@ -155,7 +154,7 @@ const PresentTeamMember = () => {
       </Card>
       <ToastContainer />
     </>
-  );
-};
+  )
+}
 
-export default PresentTeamMember;
+export default PresentTeamMember
