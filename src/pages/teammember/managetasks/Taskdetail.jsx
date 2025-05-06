@@ -59,7 +59,7 @@ const Taskdetail = () => {
 
   return (
     <section className="bg-gray-50 min-h-screen flex items-start justify-center py-8">
-      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-md p-6 space-y-6">
+      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-md p-6 space-y-6 overflow-x-auto">
         {/* Title */}
         <div className="flex flex-col md:flex-row items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-bold text-blue-700">
@@ -67,13 +67,9 @@ const Taskdetail = () => {
           </h1>
         </div>
 
-        <h2 className="text-xl font-semibold text-blue-700">
-          User Information
-        </h2>
-
         {/* Details Grid */}
         {taskData ? (
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <dl className="grid grid-cols-1 gap-y-4">
             {[
               ["Name", taskData.username],
               ["Branch Name", branchName],
@@ -86,10 +82,12 @@ const Taskdetail = () => {
               ["Description", taskData.description],
             ].map(([label, value]) => (
               <React.Fragment key={label}>
-                <dt className="text-[#BA0D09] font-medium">{label} :</dt>
-                <dd className="text-[#000] text-sm font-[Liberation Mono]">
-                  {value || "—"}
-                </dd>
+                <div>
+                  <dt className="text-[#BA0D09] font-medium">{label} :</dt>
+                  <dd className="text-[#000] text-sm font-[Liberation Mono] break-words">
+                    {value || "—"}
+                  </dd>
+                </div>
               </React.Fragment>
             ))}
           </dl>

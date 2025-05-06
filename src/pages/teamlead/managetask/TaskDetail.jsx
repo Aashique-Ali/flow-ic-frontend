@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom"
 import { useAuth } from "@/auth/AuthContext"
 import api from "@/lib/api"
 
-const Taskdetail = () => {
+const TaskDetail = () => {
   const [taskData, setTaskData] = useState(null)
   const [branchName, setBranchName] = useState("")
   const [departmentName, setDepartmentName] = useState("")
@@ -54,9 +54,12 @@ const Taskdetail = () => {
     fetchTaskAndBranchAndDepartment()
   }, [apiUrl, id, companyId])
 
+  // Helper to check file type
+  const isImage = (url) => /\.(jpeg|jpg|png|gif|bmp|webp)$/i.test(url)
+
   return (
     <section className="bg-gray-50 min-h-screen flex items-start justify-center py-8">
-      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-md p-6 space-y-6">
+      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-md p-6 space-y-6 overflow-x-auto">
         {/* Title */}
         <div className="flex flex-col md:flex-row items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-bold text-blue-700">
@@ -64,13 +67,9 @@ const Taskdetail = () => {
           </h1>
         </div>
 
-        <h2 className="text-xl font-semibold text-blue-700">
-          User Information
-        </h2>
-
         {/* Details Grid */}
         {taskData ? (
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <dl className="grid grid-cols-1 gap-y-4">
             {[
               ["Name", taskData.username],
               ["Branch Name", branchName],
@@ -83,10 +82,12 @@ const Taskdetail = () => {
               ["Description", taskData.description],
             ].map(([label, value]) => (
               <React.Fragment key={label}>
-                <dt className="text-[#BA0D09] font-medium">{label} :</dt>
-                <dd className="text-[#000] text-sm font-[Liberation Mono]">
-                  {value || "—"}
-                </dd>
+                <div>
+                  <dt className="text-[#BA0D09] font-medium">{label} :</dt>
+                  <dd className="text-[#000] text-sm font-[Liberation Mono] break-words">
+                    {value || "—"}
+                  </dd>
+                </div>
               </React.Fragment>
             ))}
           </dl>
@@ -97,12 +98,23 @@ const Taskdetail = () => {
         {/* Attached File or “no record” */}
         {taskData?.fileupload ? (
           <div className="flex justify-center">
-            <img
-              src={taskData.fileupload}
-              alt="Attachment"
-              className="w-40 h-40 object-cover rounded-lg border cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => setIsImageOpen(true)}
-            />
+            {isImage(taskData.fileupload) ? (
+              <img
+                src={taskData.fileupload}
+                alt="Attachment"
+                className="w-40 h-40 object-cover rounded-lg border cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => setIsImageOpen(true)}
+              />
+            ) : (
+              <a
+                href={taskData.fileupload}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline font-medium"
+              >
+                Open Attached File
+              </a>
+            )}
           </div>
         ) : (
           <p className="text-center text-[#BA0D09] font-medium">
@@ -111,7 +123,7 @@ const Taskdetail = () => {
         )}
 
         {/* Fullscreen Image Overlay */}
-        {isImageOpen && (
+        {isImage(taskData?.fileupload) && isImageOpen && (
           <div
             className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
             onClick={() => setIsImageOpen(false)}
@@ -130,4 +142,4 @@ const Taskdetail = () => {
   )
 }
 
-export default Taskdetail
+export default TaskDetail

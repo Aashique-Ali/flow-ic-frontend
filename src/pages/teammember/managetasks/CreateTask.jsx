@@ -26,7 +26,6 @@ import api from "@/lib/api"
 const AddTask = () => {
   const { companyId, authToken, username, userId } = useAuth()
   const navigate = useNavigate()
-  const apiUrl = import.meta.env.VITE_API_URL
 
   const [departmentOptions, setDepartmentOptions] = useState([])
   const [branchOptions, setBranchOptions] = useState([])
@@ -92,7 +91,6 @@ const AddTask = () => {
   }, [companyId, username, userId, setValue, authToken])
 
   const onSubmit = async (data) => {
-    // Manual validation for required dropdowns and file
     if (!data.branchid || !data.branchid.value) {
       toast.error("Branch is required")
       return
@@ -134,7 +132,6 @@ const AddTask = () => {
     try {
       await api.post(`/task/create`, formData, { headers })
       toast.success("Task created successfully")
-
       setTimeout(() => {
         navigate("/dashboard/user")
       }, 1200)
@@ -146,6 +143,14 @@ const AddTask = () => {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const customSelectStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderRadius: "1.5rem", // rounded-3xl
+      padding: "2px",
+    }),
   }
 
   return (
@@ -206,8 +211,7 @@ const AddTask = () => {
                   <Select
                     {...field}
                     options={branchOptions}
-                    className="rounded-3xl"
-                    onChange={(opt) => field.onChange(opt)}
+                    styles={customSelectStyles}
                   />
                 )}
               />
@@ -228,11 +232,12 @@ const AddTask = () => {
 
             <div>
               <label className="block mb-2 font-medium">Description</label>
-              <Input
+              <textarea
                 {...register("description", {
                   required: "Description is required",
                 })}
-                className="rounded-3xl"
+                className="rounded-3xl w-full p-2 border border-gray-300"
+                rows={4}
               />
               {errors.description && (
                 <p className="text-red-500">{errors.description.message}</p>
@@ -243,6 +248,7 @@ const AddTask = () => {
               <label className="block mb-2 font-medium">Upload File</label>
               <Input
                 type="file"
+                accept="image/*,application/pdf"
                 {...register("file")}
                 className="rounded-3xl"
               />
@@ -270,7 +276,7 @@ const AddTask = () => {
                   <Select
                     {...field}
                     options={departmentOptions}
-                    className="rounded-3xl"
+                    styles={customSelectStyles}
                   />
                 )}
               />
@@ -280,6 +286,7 @@ const AddTask = () => {
               <label className="block mb-2 font-medium">Due Date</label>
               <Input
                 type="date"
+                min={new Date().toISOString().split("T")[0]}
                 {...register("dueDate", { required: "Due date is required" })}
                 className="rounded-3xl"
               />
